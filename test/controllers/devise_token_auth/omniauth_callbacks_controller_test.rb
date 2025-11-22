@@ -17,8 +17,32 @@ class OmniauthTest < ActionDispatch::IntegrationTest
   end
 
   def get_parsed_data_json
-    encoded_json_data = @response.body.match(/var data \= JSON.parse\(decodeURIComponent\(\'(.+)\'\)\)\;/)[1]
-    JSON.parse(CGI.unescape(encoded_json_data))
+    puts "\n" + "="*80
+    puts "DEBUG: get_parsed_data_json called"
+    puts "Response status: #{@response.status}"
+    puts "Response content_type: #{@response.content_type}"
+    puts "Response body length: #{@response.body.length}"
+    puts "Response body (first 500 chars):"
+    puts @response.body[0..500]
+    puts "="*80
+
+    match_result = @response.body.match(/var data \= JSON.parse\(decodeURIComponent\(\'(.+)\'\)\)\;/)
+    puts "DEBUG: Regex match result: #{match_result.inspect}"
+
+    if match_result.nil?
+      puts "ERROR: Could not find 'var data = JSON.parse(decodeURIComponent(...' pattern in response"
+      puts "Full response body:"
+      puts @response.body
+      puts "="*80 + "\n"
+      return nil
+    end
+
+    encoded_json_data = match_result[1]
+    puts "DEBUG: Encoded JSON data (first 200 chars): #{encoded_json_data[0..200]}"
+    decoded_data = JSON.parse(CGI.unescape(encoded_json_data))
+    puts "DEBUG: Decoded data: #{decoded_data.inspect}"
+    puts "="*80 + "\n"
+    decoded_data
   end
 
   describe 'success callback' do
@@ -35,6 +59,12 @@ class OmniauthTest < ActionDispatch::IntegrationTest
 
     test 'request should pass correct redirect_url' do
       get_success
+      puts "\n" + "="*80
+      puts "DEBUG: request should pass correct redirect_url"
+      puts "Expected redirect_url: #{@redirect_url}"
+      puts "Actual auth_origin_url: #{controller.send(:omniauth_params)['auth_origin_url'].inspect}"
+      puts "Full omniauth_params: #{controller.send(:omniauth_params).inspect}"
+      puts "="*80 + "\n"
       assert_equal @redirect_url,
                    controller.send(:omniauth_params)['auth_origin_url']
     end
@@ -139,6 +169,12 @@ class OmniauthTest < ActionDispatch::IntegrationTest
       end
 
       test 'additional attribute was passed' do
+        puts "\n" + "="*80
+        puts "DEBUG: additional attribute was passed"
+        puts "Expected favorite_color: #{@fav_color.inspect}"
+        puts "Actual favorite_color: #{@resource.favorite_color.inspect}"
+        puts "Resource attributes: #{@resource.attributes.inspect}"
+        puts "="*80 + "\n"
         assert_equal @fav_color, @resource.favorite_color
       end
 
@@ -244,6 +280,14 @@ class OmniauthTest < ActionDispatch::IntegrationTest
 
         # We have been forwarded to a url with all the expected
         # data in the query params.
+
+        puts "\n" + "="*80
+        puts "DEBUG: redirects to auth_origin_url with all expected query params (sameWindow)"
+        puts "Response status: #{response.status}"
+        puts "Controller params: #{controller.params.inspect}"
+        puts "uid param: #{controller.params['uid'].inspect}"
+        puts "Response location: #{response.location.inspect}"
+        puts "="*80 + "\n"
 
         # Assert that a uid was passed along.  We have to assume
         # that the rest of the values were as well, as we don't
