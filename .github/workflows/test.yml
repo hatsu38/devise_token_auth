@@ -23,6 +23,7 @@ jobs:
           - gemfiles/rails_5_2.gemfile
           - gemfiles/rails_6_0.gemfile
           - gemfiles/rails_7_0.gemfile
+          - gemfiles/rails_7_1.gemfile
         db:
           - sqlite
           - mysql
@@ -38,31 +39,43 @@ jobs:
             devise-token-auth-orm: mongoid
           - ruby: 2.7
             gemfile: gemfiles/rails_7_0.gemfile
+          - ruby: 2.7
+            gemfile: gemfiles/rails_7_1.gemfile
           - ruby: '3.0'
             gemfile: gemfiles/rails_7_0.gemfile
           - ruby: '3.0'
             gemfile: gemfiles/rails_7_0_mongoid_7.gemfile
             devise-token-auth-orm: mongoid
+          - ruby: '3.0'
+            gemfile: gemfiles/rails_7_1.gemfile
           - ruby: 3.1
             gemfile: gemfiles/rails_7_0.gemfile
           - ruby: 3.1
             gemfile: gemfiles/rails_7_0_mongoid_7.gemfile
             devise-token-auth-orm: mongoid
+          - ruby: 3.1
+            gemfile: gemfiles/rails_7_1.gemfile
           - ruby: 3.2
             gemfile: gemfiles/rails_7_0.gemfile
           - ruby: 3.2
             gemfile: gemfiles/rails_7_0_mongoid_7.gemfile
             devise-token-auth-orm: mongoid
+          - ruby: 3.2
+            gemfile: gemfiles/rails_7_1.gemfile
           - ruby: 3.3
             gemfile: gemfiles/rails_7_0.gemfile
           - ruby: 3.3
             gemfile: gemfiles/rails_7_0_mongoid_7.gemfile
             devise-token-auth-orm: mongoid
+          - ruby: 3.3
+            gemfile: gemfiles/rails_7_1.gemfile
           - ruby: 3.4
             gemfile: gemfiles/rails_7_0.gemfile
           - ruby: 3.4
             gemfile: gemfiles/rails_7_0_mongoid_7.gemfile
             devise-token-auth-orm: mongoid
+          - ruby: 3.4
+            gemfile: gemfiles/rails_7_1.gemfile
         exclude:
           - ruby: 2.7
             gemfile: gemfiles/rails_4_2.gemfile

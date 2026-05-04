@@ -62,8 +62,26 @@ class DeviseTokenAuth::ConfirmationsControllerTest < ActionController::TestCase
           end
 
           test 'redirect url includes token params' do
-            assert @token_params.all? { |param| response.body.include?(param) }
-            assert response.body.include?('account_confirmation_success')
+            puts "\n" + "="*80
+            puts "DEBUG: redirect url includes token params test (authenticated)"
+            puts "Token params: #{@token_params.inspect}"
+            puts "Response status: #{response.status}"
+            puts "Response location: #{response.location}"
+            puts "Response body length: #{response.body.length}"
+            puts "Response body (first 500 chars):"
+            puts response.body[0..500]
+
+            # For 302 redirects, check the location header instead of body
+            redirect_location = response.location || response.body
+            @token_params.each do |param|
+              result = redirect_location.include?(param)
+              puts "  Param '#{param}' included: #{result}"
+            end
+            puts "account_confirmation_success included: #{redirect_location.include?('account_confirmation_success')}"
+            puts "="*80 + "\n"
+
+            assert @token_params.all? { |param| redirect_location.include?(param) }
+            assert redirect_location.include?('account_confirmation_success')
           end
         end
 
@@ -86,8 +104,26 @@ class DeviseTokenAuth::ConfirmationsControllerTest < ActionController::TestCase
           end
 
           test 'redirect url does not include token params' do
-            refute @token_params.any? { |param| response.body.include?(param) }
-            assert response.body.include?('account_confirmation_success')
+            puts "\n" + "="*80
+            puts "DEBUG: redirect url does not include token params test (unauthenticated)"
+            puts "Token params: #{@token_params.inspect}"
+            puts "Response status: #{response.status}"
+            puts "Response location: #{response.location}"
+            puts "Response body length: #{response.body.length}"
+            puts "Response body (first 500 chars):"
+            puts response.body[0..500]
+
+            # For 302 redirects, check the location header instead of body
+            redirect_location = response.location || response.body
+            @token_params.each do |param|
+              result = redirect_location.include?(param)
+              puts "  Param '#{param}' included: #{result}"
+            end
+            puts "account_confirmation_success included: #{redirect_location.include?('account_confirmation_success')}"
+            puts "="*80 + "\n"
+
+            refute @token_params.any? { |param| redirect_location.include?(param) }
+            assert redirect_location.include?('account_confirmation_success')
           end
         end
 

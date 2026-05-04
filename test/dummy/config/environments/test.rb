@@ -31,6 +31,9 @@ Rails.application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  # Use memory store for cache to ensure sessions persist across redirects in tests
+  config.cache_store = :memory_store
+
   # Raise exceptions instead of rendering exception templates.
   if Rails::VERSION::MAJOR >= 7 && Rails::VERSION::MINOR > 0
     config.action_dispatch.show_exceptions = :none
